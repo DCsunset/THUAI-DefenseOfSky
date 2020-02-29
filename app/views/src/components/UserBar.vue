@@ -6,10 +6,10 @@
           :to="{path: '/register/login', query: { redirect: $route.path !== '/error' }}"
         >登录
         </v-btn>
-        <v-btn text color="secondary"
+        <!-- <v-btn text color="secondary"
           :to="{path: '/register/signup', query: { redirect: $route.path !== '/error' }}"
         >注册
-        </v-btn>
+        </v-btn> -->
         <v-btn text color="primary"
           v-if="$route.meta.type==='login'"
           :to="$store.state.redirect"

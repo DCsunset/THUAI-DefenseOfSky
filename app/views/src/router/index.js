@@ -6,7 +6,7 @@ const ContestMain = () => import('../views/ContestMain.vue')
 const Register = () => import('../views/Register.vue')
 const Login = () => import('../views/Login.vue')
 const Token = () => import('../views/Token.vue')
-const Signup = () => import('../views/Signup.vue')
+// const Signup = () => import('../views/Signup.vue')
 const Profile = () => import('../views/Profile.vue')
 const SubmissionList = () => import('../views/SubmissionList.vue')
 const SubmissionDetail = () => import('../views/SubmissionDetail.vue')
@@ -162,15 +162,16 @@ const routes = [
           type: 'login',
           stalling: false
         }
-      }, {
-        path: 'signup',
-        component: Signup,
-        meta: {
-          title: '注册',
-          type: 'login',
-          stalling: true
-        }
       }
+      // {
+      //   path: 'signup',
+      //   component: Signup,
+      //   meta: {
+      //     title: '注册',
+      //     type: 'login',
+      //     stalling: true
+      //   }
+      // }
     ]
   }, {
     path: '/profile/:handle',

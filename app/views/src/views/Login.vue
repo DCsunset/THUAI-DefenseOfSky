@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="text-center">
     <v-card
       :raised="$vuetify.breakpoint.mdAndUp"
       :outlined="!$vuetify.breakpoint.mdAndUp"
@@ -11,54 +11,23 @@
     </v-snackbar>
       <v-card-title><div class="headline pl-6 pr-6 pb-4 pt-4">登录BotAny</div></v-card-title>
       <v-card-text>
-        <v-form ref="loginForm" v-model="valid">
-          <v-text-field
-            ref="handle"
-            v-model="handle"
-            label="账号"
-            :rules="handleRules"
-            class="pl-6 pr-6"
-            @keypress.enter="switchFocus"
-          >
-          </v-text-field>
-          <v-text-field
-            ref="password"
-            v-model="password"
-            label="密码"
-            :rules="passwordRules"
-            :append-icon="showPassword? 'mdi-eye' : 'mdi-eye-off'"
-            :type="showPassword? 'text' : 'password'"
-            @click:append="showPassword=!showPassword"
-            class="pl-6 pr-6"
-            @keypress.enter="autoSubmit"
-          >
-          </v-text-field>
-        </v-form>
-      </v-card-text>
-      <v-card-actions>
-        <v-container>
+      <div class="title text-center">
+                  请从THU AI主网站登录本赛道
+                  </div>
           <v-row class="pl-4 pr-4">
-            <v-col :cols="12" :md="6">
+            <v-spacer />
+            <v-col :cols="12" :sm="6">
               <v-btn
                 ref="login"
                 color="primary"
                 block large
-                :disabled="!valid||loading"
-                @click="login"
-                :loading="loading"
-              >登录
+                @click="goToMain"
+              >前往主网站
               </v-btn>
             </v-col>
-            <v-col :cols="12" :md="6">
-              <v-btn text
-                color="secondary"
-                block large
-                :to="{path: '/register/signup', query: {redirect: $route.query.redirect}}"
-              >注册</v-btn>
-            </v-col>
+            <v-spacer />
           </v-row>
-        </v-container>
-      </v-card-actions>
+      </v-card-text>
     </v-card>
   </div>
 </template>
@@ -91,6 +60,9 @@ export default {
       if (this.$refs.loginForm.validate()) {
         this.login()
       }
+    },
+    goToMain () {
+      window.location = 'https://thu-ai.net'
     },
     login () {
       if (!this.$refs.loginForm.validate()) {
