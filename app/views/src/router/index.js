@@ -5,6 +5,7 @@ const ContestList = () => import('../views/ContestList.vue')
 const ContestMain = () => import('../views/ContestMain.vue')
 const Register = () => import('../views/Register.vue')
 const Login = () => import('../views/Login.vue')
+const Token = () => import('../views/Token.vue')
 const Signup = () => import('../views/Signup.vue')
 const Profile = () => import('../views/Profile.vue')
 const SubmissionList = () => import('../views/SubmissionList.vue')
@@ -21,6 +22,17 @@ const CreateContest = () => import('../views/CreateContest.vue')
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '/token',
+    name: 'token',
+    component: Token,
+    meta: {
+      title: '登录',
+      navbarType: 'none',
+      prePage: [],
+      stalling: false
+    }
+  },
   {
     path: '/',
     name: 'ContestList',
