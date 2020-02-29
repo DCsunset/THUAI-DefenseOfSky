@@ -167,6 +167,71 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "{\"err\": []}")
 }
 
+type TokenResp struct {
+	Id string
+}
+type UserResp struct {
+	Username string
+}
+
+func tokenHandler(w http.ResponseWriter, r *http.Request) {
+	t := r.PostFormValue("token")
+	reqBody, _ := json.Marshal(map[string]string{"token": t})
+
+	resp, err := http.Post(
+		"https://api.eesast.com/v1/users/token/validate",
+		"application/json",
+		bytes.NewBuffer(reqBody),
+	)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(resp.StatusCode)
+	w.WriteHeader(resp.StatusCode)
+	if resp.StatusCode != 200 {
+		fmt.Fprintf(w, "{}")
+		return
+	}
+
+	decoder := json.NewDecoder(resp.Body)
+	var tr TokenResp
+	err = decoder.Decode(&tr)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	resp, err = http.Get(
+		fmt.Sprintf("https://api.eesast.com/v1/users/username/%s", tr.Id),
+	)
+	if resp.StatusCode != 200 {
+		fmt.Fprintf(w, "{}")
+		return
+	}
+	decoder = json.NewDecoder(resp.Body)
+	var ur UserResp
+	err = decoder.Decode(&ur)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	u := models.User{}
+	u.Handle = tr.Id
+	u.Nickname = ur.Username
+
+	if err := u.Create(); err != nil {
+		panic(err)
+	}
+
+	middlewareAuthGrant(w, r, u.Id)
+	w.WriteHeader(200)
+	enc := json.NewEncoder(w)
+	enc.SetEscapeHTML(false)
+	enc.Encode(u.Representation())
+}
+
 // curl http://localhost:3434/login -i -d "handle=abc&password=qwq"
 func loginHandler(w http.ResponseWriter, r *http.Request) {
 	s := r.PostFormValue("handle")
@@ -467,7 +532,8 @@ func userSearchHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func init() {
-	registerRouterFunc("/signup", signupHandler, "POST")
+	//registerRouterFunc("/signup", signupHandler, "POST")
+	registerRouterFunc("/token", tokenHandler, "POST")
 	registerRouterFunc("/login", loginHandler, "POST")
 	registerRouterFunc("/logout", logoutHandler, "POST")
 	registerRouterFunc("/whoami", whoAmIHandler, "GET")
