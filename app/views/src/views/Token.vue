@@ -40,9 +40,8 @@ export default {
       this.$router.push('/')
       this.text = '登录成功！'
       this.error = false
-    }).catch(err => {
+    }).catch(_ => {
       this.loading = false
-      console.log(err)
       this.text = '登录失败！'
       this.error = true
       // if (err.response.data.error === 'wrong captcha') {
