@@ -6,8 +6,8 @@
       style="z-index: 100"
     >
       <v-img
-        alt="BotAny"
-        class="shrink hidden-sm-and-down mr-2"
+        alt="THU AI"
+        class="mx-n4 mb-2 shrink hidden-sm-and-down "
         src="./assets/logo.png"
         contain
         height="48"
@@ -15,17 +15,7 @@
         style="cursor: pointer"
         @click="$router.push('/')"
       />
-
-      <v-img
-        alt="BotAny"
-        class="shrink hidden-md-and-up mr-2"
-        src="./assets/logo-s.png"
-        contain
-        height="48"
-        width="78"
-        style="cursor: pointer"
-        @click="$router.push('/')"
-      />
+      <div class="mr-4 headline"><b>蓝天保卫战</b></div>
 
       <v-scroll-x-transition>
         <top-bar v-if="$route.meta.type==='contest'"></top-bar>
