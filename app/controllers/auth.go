@@ -211,7 +211,10 @@ func tokenHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	id := strconv.Itoa(tr.Id)
 
-	resp, err = http.Get("https://api.eesast.com/v1/tracks/3/prePlayers/" + id)
+	client := &http.Client{}
+	req, _ := http.NewRequest("GET", "https://api.eesast.com/v1/tracks/3/prePlayers/"+id, nil)
+	req.Header.Set("Authorization", "Bearer "+t)
+	resp, _ = client.Do(req)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -245,8 +248,14 @@ func tokenHandler(w http.ResponseWriter, r *http.Request) {
 	u.Handle = id
 	u.Nickname = ur.Username
 
-	if err := u.Create(); err != nil {
-		panic(err)
+	if err := u.ReadByHandle(); err != nil {
+		if err == sql.ErrNoRows {
+			if err := u.Create(); err != nil {
+				panic(err)
+			}
+		} else {
+			panic(err)
+		}
 	}
 
 	middlewareAuthGrant(w, r, u.Id)

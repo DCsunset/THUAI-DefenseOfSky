@@ -37,7 +37,7 @@ export default {
       }
       this.$store.commit('login', logindata)
       this.loading = false
-      this.text = '登录成功！'
+      this.text = '登录成功，即将跳转分赛道主页...'
       this.error = false
       setTimeout(() => {
         this.$router.push('/')
