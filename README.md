@@ -1,6 +1,6 @@
 # Botany
 
-master [![Build Status](https://travis-ci.com/kawa-yoiko/botany.svg?token=GcJo7cdxZitoWy9qXz8p&branch=master)](https://travis-ci.com/kawa-yoiko/botany) | dev [![Build Status](https://travis-ci.com/kawa-yoiko/botany.svg?token=GcJo7cdxZitoWy9qXz8p&branch=dev)](https://travis-ci.com/kawa-yoiko/botany)
+master [![Build Status](https://travis-ci.com/DCsunset/THUAI-DefenseOfSky.svg?token=GcJo7cdxZitoWy9qXz8p&branch=master)](https://travis-ci.com/DCsunset/THUAI-DefenseOfSky) | dev [![Build Status](https://travis-ci.com/DCsunset/THUAI-DefenseOfSky.svg?token=GcJo7cdxZitoWy9qXz8p&branch=dev)](https://travis-ci.com/DCsunset/THUAI-DefenseOfSky)
 
 Botany is a customizable contest platform for games among programs.
 
@@ -12,7 +12,7 @@ See [README in sdk/ directory](sdk/README.md).
 
 Tested Go version: 1.13.1, 1.13.7
 
-Clone repository into `$GOPATH/src/github.com/kawa-yoiko/botany`, or create a symlink, whichever works.
+Clone repository into `$GOPATH/src/github.com/DCsunset/THUAI-DefenseOfSky`, or create a symlink, whichever works.
 
 Set up PostgresQL and Redis server (refer to documentations for the target platform).
 
