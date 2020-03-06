@@ -9,12 +9,12 @@ import (
 	"time"
 )
 
-func CreateSu(handle string, password string) {
+func CreateOrganizer(handle string, password string) {
 	u := User{
 		Handle:    handle,
 		Email:     handle + "@example.com",
 		Password:  password,
-		Privilege: UserPrivilegeSuperuser,
+		Privilege: UserPrivilegeOrganizer,
 		Nickname:  "~ " + handle + " ~",
 		Bio:       "Admin",
 	}
