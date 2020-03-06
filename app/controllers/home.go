@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/kawa-yoiko/botany/app/globals"
 	"github.com/kawa-yoiko/botany/app/models"
 
 	"fmt"
@@ -15,9 +16,16 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 func fakeDatabaseHandler(w http.ResponseWriter, r *http.Request) {
 	s := r.PostFormValue("handle")
 	p := r.PostFormValue("password")
-	models.CreateOrganizer(s, p)
-	// models.FakeDatabase()
-	fmt.Fprintf(w, "Fake User Created\n")
+	k := r.PostFormValue("key")
+	config := globals.Config()
+	if k != config.JudgeSigKey {
+		w.WriteHeader(400)
+		fmt.Fprintf(w, "{}")
+	} else {
+		models.CreateOrganizer(s, p)
+		// models.FakeDatabase()
+		fmt.Fprintf(w, "Fake User Created\n")
+	}
 }
 
 func fakeMatchesHandler(w http.ResponseWriter, r *http.Request) {
