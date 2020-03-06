@@ -1,6 +1,6 @@
-# Botany
+# THUAI DefenseOfSky
 
-master [![Build Status](https://travis-ci.com/DCsunset/THUAI-DefenseOfSky.svg?token=GcJo7cdxZitoWy9qXz8p&branch=master)](https://travis-ci.com/DCsunset/THUAI-DefenseOfSky) | dev [![Build Status](https://travis-ci.com/DCsunset/THUAI-DefenseOfSky.svg?token=GcJo7cdxZitoWy9qXz8p&branch=dev)](https://travis-ci.com/DCsunset/THUAI-DefenseOfSky)
+[![Build Status](https://travis-ci.com/DCsunset/THUAI-DefenseOfSky.svg?token=GcJo7cdxZitoWy9qXz8p&branch=master)](https://travis-ci.com/DCsunset/THUAI-DefenseOfSky)
 
 Botany is a customizable contest platform for games among programs.
 
