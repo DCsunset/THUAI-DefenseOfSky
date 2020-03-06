@@ -37,9 +37,11 @@ export default {
       }
       this.$store.commit('login', logindata)
       this.loading = false
-      this.$router.push('/')
       this.text = '登录成功！'
       this.error = false
+      setTimeout(() => {
+        this.$router.push('/')
+      }, 3000)
     }).catch(_ => {
       this.loading = false
       this.text = '登录失败！'
