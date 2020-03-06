@@ -188,9 +188,8 @@ func tokenHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(resp.StatusCode)
-	w.WriteHeader(resp.StatusCode)
 	if resp.StatusCode != 200 {
+		w.WriteHeader(resp.StatusCode)
 		fmt.Fprintf(w, "{}")
 		return
 	}
@@ -203,13 +202,26 @@ func tokenHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	resp, err = http.Get("https://api.eesast.com/v1/tracks/3/prePlayers/" + tr.Id)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	if resp.StatusCode != 200 {
+		w.WriteHeader(resp.StatusCode)
+		fmt.Fprintf(w, "{}")
+		return
+	}
+
 	resp, err = http.Get(
 		fmt.Sprintf("https://api.eesast.com/v1/users/username/%s", tr.Id),
 	)
 	if resp.StatusCode != 200 {
+		w.WriteHeader(resp.StatusCode)
 		fmt.Fprintf(w, "{}")
 		return
 	}
+
 	decoder = json.NewDecoder(resp.Body)
 	var ur UserResp
 	err = decoder.Decode(&ur)
