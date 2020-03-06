@@ -24,7 +24,6 @@ export default {
     }
   },
   mounted () {
-    console.log(this.$route.query.token)
     this.loading = true
     this.$axios.get(
       '/token',
