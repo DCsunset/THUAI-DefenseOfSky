@@ -4,7 +4,7 @@
       {{errMessage}}
     </v-snackbar>
     <v-container>
-      <h1 class="my-4">欢迎来到防疫保卫战赛道</h1>
+      <h1 class="my-4">欢迎来到疫情攻坚战赛道</h1>
       <div>当前共有{{total}}场赛事</div>
       <div>
         <v-btn

@@ -15,7 +15,7 @@
         style="cursor: pointer"
         @click="$router.push('/')"
       />
-      <div class="mr-4 headline"><b>防疫保卫战</b></div>
+      <div class="mr-4 headline"><b>疫情攻坚战</b></div>
 
       <v-scroll-x-transition>
         <top-bar v-if="$route.meta.type==='contest'"></top-bar>
