@@ -62,7 +62,7 @@ export default {
       }
     },
     goToMain () {
-      window.location = 'https://thu-ai.net'
+      window.location = 'http://140.143.170.135'
     },
     login () {
       if (!this.$refs.loginForm.validate()) {
