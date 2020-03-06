@@ -28,6 +28,13 @@ function update_stats(report, par)
     print(report)
     for i = 1, #par do
         print(i, par[i].rating, par[i].performance)
+        if i==1 then
+            par[i].rating=par[i].rating+string.byte(report,string.find( report,"player0",1)+10)-49
+        elseif i==2 then
+            par[i].rating=par[i].rating+string.byte(report,string.find( report,"player1",1)+10)-49
+        else
+            print('No Player')
+        end
         par[i].rating = par[i].rating + 1
         par[i].performance = 'Took part in ' .. tostring(par[i].rating) .. ' match'
         if par[i].rating ~= 1 then par[i].performance = par[i].performance .. 'es' end
