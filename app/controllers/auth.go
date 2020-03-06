@@ -1,19 +1,20 @@
 package controllers
 
 import (
-	"github.com/kawa-yoiko/botany/app/globals"
-	"github.com/kawa-yoiko/botany/app/models"
+	"github.com/DCsunset/THUAI-DefenseOfSky/app/globals"
+	"github.com/DCsunset/THUAI-DefenseOfSky/app/models"
 
 	"bytes"
 	"database/sql"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/gorilla/mux"
 	"io"
 	"mime"
 	"net/http"
 	"strings"
+
+	"github.com/gorilla/mux"
 )
 
 // Returns a User struct

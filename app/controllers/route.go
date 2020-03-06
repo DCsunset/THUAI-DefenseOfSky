@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"github.com/kawa-yoiko/botany/app/globals"
+	"github.com/DCsunset/THUAI-DefenseOfSky/app/globals"
 
 	"net/http"
 

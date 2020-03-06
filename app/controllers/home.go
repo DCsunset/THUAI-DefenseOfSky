@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"github.com/kawa-yoiko/botany/app/globals"
-	"github.com/kawa-yoiko/botany/app/models"
+	"github.com/DCsunset/THUAI-DefenseOfSky/app/globals"
+	"github.com/DCsunset/THUAI-DefenseOfSky/app/models"
 
 	"fmt"
 	"net/http"

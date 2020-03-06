@@ -1,9 +1,10 @@
 package controllers
 
 import (
-	"github.com/kawa-yoiko/botany/app/globals"
-	"github.com/kawa-yoiko/botany/app/models"
 	"mime"
+
+	"github.com/DCsunset/THUAI-DefenseOfSky/app/globals"
+	"github.com/DCsunset/THUAI-DefenseOfSky/app/models"
 
 	"database/sql"
 	"encoding/json"

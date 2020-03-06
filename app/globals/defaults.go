@@ -1,7 +1,7 @@
 package globals
 
 import (
-	"github.com/kawa-yoiko/botany/app/models"
+	"github.com/DCsunset/THUAI-DefenseOfSky/app/models"
 
 	"io/ioutil"
 	"log"
