@@ -393,7 +393,7 @@ def main():
             break
 
     # 保存录像文件
-    print('{ "player0": %d, "player1": %d, "replay": %s' % (Scores[0], Scores[1], json.dumps(log)))
+    print('{ "player0": %d, "player1": %d, "replay": "%s" }' % (Scores[0], Scores[1], json.dumps(log)))
     # fo = open("replay.json", "w")
     # fo.write(json.dumps(log))
     # fo.close()
