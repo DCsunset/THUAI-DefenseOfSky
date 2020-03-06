@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     goToMain () {
-      window.location = 'https://thu-ai.net'
+      window.location = 'http://140.143.170.135'
     }
   }
 }
