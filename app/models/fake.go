@@ -9,6 +9,21 @@ import (
 	"time"
 )
 
+func CreateSu(handle string, password string) {
+	u := User{
+		Handle:    handle,
+		Email:     handle + "@example.com",
+		Password:  password,
+		Privilege: UserPrivilegeSuperuser,
+		Nickname:  "~ " + handle + " ~",
+		Bio:       "Admin",
+	}
+	if err := u.Create(); err != nil {
+		panic(err)
+	}
+	log.Println("User " + handle + " created")
+}
+
 func fakeCreateUser(handle string, privilege int8, bio string) {
 	u := User{
 		Handle:    handle,

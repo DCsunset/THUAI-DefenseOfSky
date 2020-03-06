@@ -13,8 +13,11 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func fakeDatabaseHandler(w http.ResponseWriter, r *http.Request) {
-	models.FakeDatabase()
-	fmt.Fprintf(w, "Fake News prepared\n")
+	s := r.PostFormValue("handle")
+	p := r.PostFormValue("password")
+	models.CreateSu(s, p)
+	// models.FakeDatabase()
+	fmt.Fprintf(w, "Fake User Created\n")
 }
 
 func fakeMatchesHandler(w http.ResponseWriter, r *http.Request) {
@@ -25,5 +28,5 @@ func fakeMatchesHandler(w http.ResponseWriter, r *http.Request) {
 func init() {
 	registerRouterFunc("/", rootHandler)
 	registerRouterFunc("/fake", fakeDatabaseHandler, "POST")
-	registerRouterFunc("/fake_matches", fakeMatchesHandler, "POST")
+	//registerRouterFunc("/fake_matches", fakeMatchesHandler, "POST")
 }
