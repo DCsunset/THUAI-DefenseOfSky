@@ -18,6 +18,7 @@ const CreateSubmission = () => import('../views/CreateSubmission.vue')
 const Judge = () => import('../views/Judge.vue')
 const Script = () => import('../views/HandleScript.vue')
 const CreateContest = () => import('../views/CreateContest.vue')
+const Admin = () => import('../views/Admin.vue')
 
 Vue.use(VueRouter)
 
@@ -26,6 +27,17 @@ const routes = [
     path: '/token',
     name: 'token',
     component: Token,
+    meta: {
+      title: '登录',
+      navbarType: 'none',
+      prePage: [],
+      stalling: false
+    }
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: Admin,
     meta: {
       title: '登录',
       navbarType: 'none',
