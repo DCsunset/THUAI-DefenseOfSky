@@ -12,6 +12,7 @@ import (
 	"io"
 	"mime"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gorilla/mux"
@@ -169,14 +170,20 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 type TokenResp struct {
-	Id string
+	Id int
 }
 type UserResp struct {
 	Username string
 }
 
 func tokenHandler(w http.ResponseWriter, r *http.Request) {
-	t := r.PostFormValue("token")
+	keys, ok := r.URL.Query()["token"]
+	if !ok || len(keys) < 1 {
+		w.WriteHeader(401)
+		fmt.Fprintf(w, "{\"err\":\"登录失败\"}")
+		return
+	}
+	t := keys[0]
 	reqBody, _ := json.Marshal(map[string]string{"token": t})
 
 	resp, err := http.Post(
@@ -188,9 +195,10 @@ func tokenHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		return
 	}
+
 	if resp.StatusCode != 200 {
 		w.WriteHeader(resp.StatusCode)
-		fmt.Fprintf(w, "{}")
+		fmt.Fprintf(w, "{\"err\":\"登录失败\"}")
 		return
 	}
 
@@ -201,24 +209,27 @@ func tokenHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		return
 	}
+	id := strconv.Itoa(tr.Id)
 
-	resp, err = http.Get("https://api.eesast.com/v1/tracks/3/prePlayers/" + tr.Id)
+	resp, err = http.Get("https://api.eesast.com/v1/tracks/3/prePlayers/" + id)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+
 	if resp.StatusCode != 200 {
 		w.WriteHeader(resp.StatusCode)
-		fmt.Fprintf(w, "{}")
+		fmt.Fprintf(w, "{\"err\":\"尚未报名比赛\"}")
 		return
 	}
 
 	resp, err = http.Get(
-		fmt.Sprintf("https://api.eesast.com/v1/users/username/%s", tr.Id),
+		fmt.Sprintf("https://api.eesast.com/v1/users/username/%s", id),
 	)
+
 	if resp.StatusCode != 200 {
 		w.WriteHeader(resp.StatusCode)
-		fmt.Fprintf(w, "{}")
+		fmt.Fprintf(w, "{\"err\":\"获取用户信息失败\"}")
 		return
 	}
 
@@ -231,7 +242,7 @@ func tokenHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	u := models.User{}
-	u.Handle = tr.Id
+	u.Handle = id
 	u.Nickname = ur.Username
 
 	if err := u.Create(); err != nil {
@@ -546,7 +557,7 @@ func userSearchHandler(w http.ResponseWriter, r *http.Request) {
 
 func init() {
 	//registerRouterFunc("/signup", signupHandler, "POST")
-	registerRouterFunc("/token", tokenHandler, "POST")
+	registerRouterFunc("/token", tokenHandler, "GET")
 	registerRouterFunc("/login", loginHandler, "POST")
 	registerRouterFunc("/logout", logoutHandler, "POST")
 	registerRouterFunc("/whoami", whoAmIHandler, "GET")

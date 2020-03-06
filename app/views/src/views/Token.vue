@@ -25,9 +25,9 @@ export default {
   },
   mounted () {
     this.loading = true
-    this.$axios.post(
+    this.$axios.get(
       '/token',
-      { token: this.$route.query.token }
+      { params: { token: this.$route.query.token } }
     ).then(res => {
       const logindata = {
         id: res.data.id,
@@ -42,9 +42,9 @@ export default {
       setTimeout(() => {
         this.$router.push('/')
       }, 3000)
-    }).catch(_ => {
+    }).catch(err => {
       this.loading = false
-      this.text = '登录失败！'
+      this.text = err.response.data.err || '登录异常'
       this.error = true
       // if (err.response.data.error === 'wrong captcha') {
       //   this.loginErrCpch = '验证码错误'
