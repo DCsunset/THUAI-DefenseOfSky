@@ -38,7 +38,8 @@
       <v-divider class="my-8" />
 
       <div>
-        <h2>游戏播放器截图</h2>
+        <h2>游戏播放器</h2>
+        <h3 class="mt-2">效果图</h3>
         <v-row>
           <v-col cols="12" md="6">
             <v-img src="../assets/1.png" />
@@ -53,11 +54,21 @@
             <v-img src="../assets/4.png" />
           </v-col>
         </v-row>
+
+        <h3 class="mt-4 mb-1">下载地址</h3>
+        <div style="font-size: 18px;">
+          Github:
+          <a href="https://github.com/Starrah/UI_THUAI/releases/download/v1.2/THUAI_v1.2.zip">
+            https://github.com/Starrah/UI_THUAI/releases/download/v1.2/THUAI_v1.2.zip
+          </a>
+        </div>
       </div>
+
+      <v-divider class="my-8" />
 
       <div>
         <h2>比赛简介</h2>
-        <div class="mt-4" style="font-size: 20px; text-indent: 2em;">
+        <div class="mt-4" style="font-size: 18px; text-indent: 2em;">
           <p>
             人工智能挑战赛（全校本科生编程类赛事）由清华大学多项重要编程类赛事联合而成，在校内拥有广泛的影响力。该赛事由清华大学学生科协主导组织，多个院系学生科协共同主办，旨在鼓励不同水平的同学大胆创新、积极合作、认真实践，做出优秀的作品，在人工智能挑战赛这个平台中，互相交流学习、提升自我。
           </p>
