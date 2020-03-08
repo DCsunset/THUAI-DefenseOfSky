@@ -4,7 +4,7 @@
       {{errMessage}}
     </v-snackbar>
     <v-container>
-      <h1 class="my-4">欢迎来到疫情攻坚战赛道</h1>
+      <h2 class="my-4">欢迎来到疫情攻坚战赛道</h2>
       <div>当前共有{{total}}场赛事</div>
       <div>
         <v-btn
@@ -36,8 +36,27 @@
       </v-row>
 
       <v-divider class="my-8" />
+
       <div>
-        <h1>比赛简介</h1>
+        <h2>游戏播放器截图</h2>
+        <v-row>
+          <v-col cols="12" md="6">
+            <v-img src="../assets/1.png" />
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-img src="../assets/2.png" />
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-img src="../assets/3.png" />
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-img src="../assets/4.png" />
+          </v-col>
+        </v-row>
+      </div>
+
+      <div>
+        <h2>比赛简介</h2>
         <div class="mt-4" style="font-size: 20px; text-indent: 2em;">
           <p>
             人工智能挑战赛（全校本科生编程类赛事）由清华大学多项重要编程类赛事联合而成，在校内拥有广泛的影响力。该赛事由清华大学学生科协主导组织，多个院系学生科协共同主办，旨在鼓励不同水平的同学大胆创新、积极合作、认真实践，做出优秀的作品，在人工智能挑战赛这个平台中，互相交流学习、提升自我。
