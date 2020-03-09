@@ -201,7 +201,7 @@ export default {
     tab: 0,
     langIdx: 0,
     langs: [
-      'C', 'Lua', 'Python', 'Cpp'
+      'C', 'Lua', 'Python', 'Python3', 'Cpp'
     ],
     langMenu: false,
     content: '',
@@ -366,7 +366,7 @@ export default {
     submit () {
       this.submiting = true
       const params = this.$qs.stringify({
-        code: this.code,
+        code: this.content,
         lang: this.langs[this.langIdx]
       })
       this.$axios.post(
