@@ -354,8 +354,9 @@ export default {
       const params = this.$qs.stringify({
         submission: item.sid
       })
+      const tail = this.mode === 'participant' ? '/delegate' : '/judge'
       this.$axios.post(
-        '/contest/' + this.$route.params.cid + '/delegate',
+        '/contest/' + this.$route.params.cid + tail,
         params
       ).then(res => {
         this.tableLoading = false
