@@ -201,7 +201,10 @@ export default {
     tab: 0,
     langIdx: 0,
     langs: [
-      'C', 'Lua', 'Python', 'Cpp'
+      'C', 'Cpp', 'Lua', 'Python', 'Python3'
+    ],
+    formatLangs: [
+      'gcc.c', 'gcc.cpp', 'lua', 'py', 'py3'
     ],
     langMenu: false,
     content: '',
@@ -316,13 +319,15 @@ export default {
     },
     getLang (lang) {
       if (lang.endsWith('cpp')) {
-        return 3
+        return 1
       } else if (lang.endsWith('c')) {
         return 0
       } else if (lang.endsWith('lua')) {
-        return 1
-      } else if (lang.endsWith('py')) {
         return 2
+      } else if (lang.endsWith('py')) {
+        return 3
+      } else if (lang.endsWith('py3')) {
+        return 4
       }
     },
     loadContent (item) {
@@ -366,8 +371,8 @@ export default {
     submit () {
       this.submiting = true
       const params = this.$qs.stringify({
-        code: this.code,
-        lang: this.langs[this.langIdx]
+        code: this.content,
+        lang: this.formatLangs[this.langIdx]
       })
       this.$axios.post(
         '/contest/' + this.$route.params.cid + '/submit',
