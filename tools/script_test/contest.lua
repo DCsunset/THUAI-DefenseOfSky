@@ -26,16 +26,27 @@ end
 function update_stats(report, par)
     print('Update with ' .. tostring(#par) .. ' parties')
     print(report)
+    local index1=string.find( report,"player0",1)+10;
+    local index2=string.find(report,"player1",1)+10;
+    local index3=string.find( report,"replay", 1)-3;
+    print(index1,index2,index3)
+
+    local player0=string.sub(report, index1,index2-14)
+    print(player0)
+    local player1=string.sub(report,index2,index3-1);
+    print(player1)
+
+    print(string.sub( "123", 1,3 ))
+
     for i = 1, #par do
         print(i, par[i].rating, par[i].performance)
         if i==1 then
-            par[i].rating=par[i].rating+string.byte(report,string.find( report,"player0",1)+10)-49
+            par[i].rating=par[i].rating+player0
         elseif i==2 then
-            par[i].rating=par[i].rating+string.byte(report,string.find( report,"player1",1)+10)-49
+            par[i].rating=par[i].rating+player1
         else
             print('No Player')
         end
-        par[i].rating = par[i].rating + 1
         par[i].performance = 'Took part in ' .. tostring(par[i].rating) .. ' match'
         if par[i].rating ~= 1 then par[i].performance = par[i].performance .. 'es' end
     end

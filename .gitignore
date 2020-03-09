@@ -8,3 +8,10 @@ node_modules/
 .idea/
 *.pyc
 .vscode/
+alpine/
+*.o
+*.so
+*.out
+*.gz
+*.txt
+*.log
