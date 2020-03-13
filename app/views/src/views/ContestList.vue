@@ -58,12 +58,20 @@
         </v-row>
 
         <h3 class="mt-4 mb-1">下载地址</h3>
-        <div style="font-size: 18px;">
-          Github:
-          <a href="https://github.com/Starrah/UI_THUAI/releases/download/v1.2/THUAI_v1.2.zip">
-            https://github.com/Starrah/UI_THUAI/releases/download/v1.2/THUAI_v1.2.zip
-          </a>
-        </div>
+        <v-row>
+          <v-card target="_blank" outlined class="ma-2 pa-4 text-center" style="font-size: 18px; width: 200px" href="/player/win_THUAI_v1.2.zip">
+            <div>
+              <v-icon large>mdi-microsoft-windows</v-icon>
+            </div>
+            Windows版
+          </v-card>
+          <v-card target="_blank" outlined class="ma-2 pa-4 text-center" style="font-size: 18px; width: 200px" href="/player/mac_THUAI_v1.2.zip">
+            <div>
+              <v-icon large>mdi-apple</v-icon>
+            </div>
+            Mac版
+          </v-card>
+        </v-row>
       </div>
 
       <v-divider class="my-8" />

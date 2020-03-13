@@ -276,7 +276,7 @@ def receiveMsg(AI):
     #print(dataLen)
     #data = readBuffer.read(dataLen)
     #return data
-    s, err = bot.recv(AI, 1000)
+    s, _ = bot.recv(AI, 1000)
     return s
 
 def logInitState():
@@ -598,6 +598,12 @@ def main():
         # time.sleep(1)
         # 执行AI的操作消息
         msg = receiveMsg(AI)
+
+        # Fail
+        if msg == None:
+            Scores[AI] = -1
+            break
+
         logForSDK[AI] = []
 
         if validate(msg, AI):
