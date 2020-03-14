@@ -12,6 +12,17 @@ function on_timer(all)
     print('Superuser has ID ' .. tostring(su_id))
     print('Creating matches for contest #0')
     print('Number of participants with delegates ' .. tostring(#all))
+    local tab={}
+    local index=1
+    while #all~=0 do
+        local n=math.random(0,#all)
+        if all[n]~=nil then
+            tab[index]=all[n]
+            table.remove(all,n)
+            index=index+1
+        end
+    end
+    all=tab
     for i = 1, #all do
         print(string.format('Contestant %s (%d), rating %d, performance "%s"',
             all[i].handle, all[i].id, all[i].rating, all[i].performance))
@@ -36,8 +47,6 @@ function update_stats(report, par)
     local player1=string.sub(report,index2,index3-1);
     print(player1)
 
-    print(string.sub( "123", 1,3 ))
-
     for i = 1, #par do
         print(i, par[i].rating, par[i].performance)
         if i==1 then
@@ -47,7 +56,6 @@ function update_stats(report, par)
         else
             print('No Player')
         end
-        par[i].performance = 'Took part in ' .. tostring(par[i].rating) .. ' match'
-        if par[i].rating ~= 1 then par[i].performance = par[i].performance .. 'es' end
+        par[i].performance = 'Total Points: ' .. tostring(par[i].rating)
     end
 end
