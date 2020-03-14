@@ -8292,6 +8292,26 @@ double getRand(){//[0,1)精确到两位 伪随机
 	return (double)(rand()%100)/100.0;
 }
 
+void getOperations(Parameters* parameters,
+				   State* state,
+				   Operations* opt);
+
+int main(){
+	Client* client = new Client();
+	client->init();
+	while(true){
+		client->stateInfo();
+		client->opt->clear();
+		getOperations(client->parameters, client->state, client->opt);
+		client->sendOpt();
+	}
+	delete client;
+}
+
+
+/**** 选手代码部分 ****/
+
+
 void init(Parameters* parameters, State* state){
 	srand((unsigned)time(NULL));
 	for(int i = 0; i < WIDTH; ++i)for(int j = 0; j < HEIGHT; ++j)buildingsMap[i][j] = false;
@@ -8842,6 +8862,7 @@ void tipster(Parameters* parameters, State* state, Operations* opt){
 	return;
 }
 
+
 void getOperations(Parameters* parameters,
 				   State* state,
 				   Operations* opt){
@@ -8920,34 +8941,4 @@ void getOperations(Parameters* parameters,
 	detect(parameters, state, opt);
 	tipster(parameters, state, opt);
 	return;
-}
-
-
-#define DEBUG 1
-
-int main(){
-	Client* client = new Client();
-	client->init();
-#ifdef DEBUG
-	FILE *fp;
-	if(client->parameters->num == 0)fp = fopen("log0.txt", "w");
-	else fp = fopen("log1.txt", "w");
-	client->parameters->Debug(fp);
-#endif
-	while(true){
-		client->stateInfo();
-		client->opt->clear();
-#ifdef DEBUG
-		client->state->Debug(fp);
-#endif
-		getOperations(client->parameters, client->state, client->opt);
-#ifdef DEBUG
-		client->opt->Debug(fp);
-#endif
-		client->sendOpt();
-	}
-#ifdef DEBUG
-	fclose(fp);
-#endif
-	delete client;
 }
