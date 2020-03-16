@@ -66,7 +66,7 @@
         >赛事编辑</v-btn>
         <v-btn
           text color="primary" class="ml-1 mr-1"
-          :to="`/contest/${$route.params.cid}/submit#edit`"
+          :to="`/contest/${$route.params.cid}/participant#submit`"
           v-if="checkAuth('imIn')"
         >我的代码</v-btn>
         <v-btn

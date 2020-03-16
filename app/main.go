@@ -57,4 +57,5 @@ func main() {
 
 	log.Printf("Listening on http://localhost:%d%s\n", port, config.ApiPrefix)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), nil))
+	models.ClearDatabase()
 }

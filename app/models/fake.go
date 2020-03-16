@@ -54,6 +54,28 @@ func fakeCreateUser(handle string, privilege int8, bio string) {
 	log.Println("User " + handle + " created")
 }
 
+// ClearDatabase clear database
+func ClearDatabase() {
+	// Clear database
+	for _, schema := range schemata {
+		_, err := db.Exec("DROP TABLE IF EXISTS " + schema.table + " CASCADE")
+		if err != nil {
+			panic(err)
+		}
+	}
+	InitializeSchemata(db)
+
+	// Clear Redis
+	if rcli != nil {
+		_, err := rcli.FlushDB().Result()
+		if err != nil {
+			panic(err)
+		}
+		InitializeRedis(rcli)
+	}
+}
+
+// FakeDatabase fake database
 func FakeDatabase() {
 	// Clear database
 	for _, schema := range schemata {
@@ -92,50 +114,58 @@ func FakeDatabase() {
 		s := "This is the description for contest number " + numbers[i] + "!\n"
 		s += "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida. Duis ac tellus et risus vulputate vehicula. Donec lobortis risus a elit. Etiam tempor. Ut ullamcorper, ligula eu tempor congue, eros est euismod turpis, id tincidunt sapien risus a quam. Maecenas fermentum consequat mi. Donec fermentum. Pellentesque malesuada nulla a mi. Duis sapien sem, aliquet nec, commodo eget, consequat quis, neque. Aliquam faucibus, elit ut dictum aliquet, felis nisl adipiscing sapien, sed malesuada diam lacus eget erat. Cras mollis scelerisque nunc. Nullam arcu. Aliquam consequat. Curabitur augue lorem, dapibus quis, laoreet et, pretium ac, nisi. Aenean magna nisl, mollis quis, molestie eu, feugiat in, orci. In hac habitasse platea dictumst."
 		script := `
-local count = 9
+local count = 2
 local su_id = get_id('su')
 
 function on_submission(all, from)
-    print('Submission', from)
-    for i = 1, #all do
-        print(all[i], all[i] == from)
-    end
+	print('Submission', from)
 end
 
 function on_timer(all)
-    count = count + 1
-    if count < 10 then return end
-    count = 0
-    print('Superuser has ID ' .. tostring(su_id))
-    print('Creating matches for contest #` + strconv.Itoa(i) + `')
-    print('Number of participants with delegates ' .. tostring(#all))
-    for i = 1, #all do
-        print(string.format('Contestant %s (%d), rating %d, performance "%s"',
-            all[i].handle, all[i].id, all[i].rating, all[i].performance))
-        if i > 1 then create_match(all[i].id, all[i - 1].id) end
-    end
+	count = count + 1
+	if count < 3 then return end
+	count = 0
+	print('Superuser has ID ' .. tostring(su_id))
+	print('Creating matches for contest #0')
+	print('Number of participants with delegates ' .. tostring(#all))
+	for i = 1, #all do
+		print(string.format('Contestant %s (%d), rating %d, performance "%s"',
+			all[i].handle, all[i].id, all[i].rating, all[i].performance))
+		if i > 1 then create_match(all[i].id, all[i - 1].id) end
+	end
 end
 
 function on_manual(all, arg)
-    print('Manual', arg)
+	print('Manual', arg)
 end
 
 function update_stats(report, par)
-    print('Update with ' .. tostring(#par) .. ' parties')
-    print(report)
-    for i = 1, #par do
-        print(i, par[i].rating, par[i].performance)
-        if i==1 then
-            par[i].rating=par[i].rating+string.byte(report,string.find( report,"player0",1)+10)-49
-        elseif i==2 then
-            par[i].rating=par[i].rating+string.byte(report,string.find( report,"player1",1)+10)-49
-        else
-            print('No Player')
-        end
-        par[i].rating = par[i].rating + 1
-        par[i].performance = 'Took part in ' .. tostring(par[i].rating) .. ' match'
-        if par[i].rating ~= 1 then par[i].performance = par[i].performance .. 'es' end
-    end
+	print('Update with ' .. tostring(#par) .. ' parties')
+	print(report)
+	local index1=string.find( report,"player0",1)+10;
+	local index2=string.find(report,"player1",1)+10;
+	local index3=string.find( report,"replay", 1)-3;
+	print(index1,index2,index3)
+
+	local player0=string.sub(report, index1,index2-14)
+	print(player0)
+	local player1=string.sub(report,index2,index3-1);
+	print(player1)
+
+	print(string.sub( "123", 1,3 ))
+
+	for i = 1, #par do
+		print(i, par[i].rating, par[i].performance)
+		if i==1 then
+			par[i].rating=par[i].rating+player0
+		elseif i==2 then
+			par[i].rating=par[i].rating+player1
+		else
+			print('No Player')
+		end
+		par[i].performance = 'Took part in ' .. tostring(par[i].rating) .. ' match'
+		if par[i].rating ~= 1 then par[i].performance = par[i].performance .. 'es' end
+	end
 end
 `
 		c := Contest{

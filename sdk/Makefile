@@ -34,8 +34,7 @@ player-py: player.py
 run: export PYTHONPATH = lib
 run: export LUA_PATH = lib/?.lua
 run:
-	@$(JUDGE_EXEC) $(JUDGE_ARGS) "$(PLAYER_CMD)" "$(PLAYER_CMD)" $(LOGS)
-
+	$(JUDGE_EXEC) $(JUDGE_ARGS) "$(PLAYER_CMD)" "$(PLAYER_CMD)" $(LOGS)
 .PHONY: judge-py player-lua player-py run-default run
 
 # Building
