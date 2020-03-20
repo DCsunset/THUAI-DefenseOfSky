@@ -602,6 +602,7 @@ def main():
         # Fail
         if msg == None:
             Scores[AI] = -1
+            Scores[1-AI] = 0
             break
 
         logForSDK[AI] = []
