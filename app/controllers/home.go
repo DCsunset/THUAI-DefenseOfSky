@@ -48,7 +48,7 @@ func fakeMatchesHandler(w http.ResponseWriter, r *http.Request) {
 
 func init() {
 	registerRouterFunc("/", rootHandler)
-	registerRouterFunc("/fake", fakeDatabaseHandler, "POST")
+	// registerRouterFunc("/fake", fakeDatabaseHandler, "POST")
 	// registerRouterFunc("/fake/clear", clearDatabaseHandler, "GET")
 	//registerRouterFunc("/fake_matches", fakeMatchesHandler, "POST")
 }
