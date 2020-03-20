@@ -17,7 +17,7 @@ MapHeight = 10
 LandPrice = 200
 
 # 加载建筑物地图
-BuildingMap = np.load("Buildings.npy")
+BuildingMap = np.load("/var/botany/Buildings.npy")
 
 # 病毒的种类数
 PollutionComponentNum = 3
@@ -217,6 +217,7 @@ if __name__ == '__main__':
                 for j in range(m.shape[1]):
                     if m[i][j]:
                         #print('o', sep='', end='')
+                        pass
                     else:
                         pass
                         #print('*', sep='', end='')
