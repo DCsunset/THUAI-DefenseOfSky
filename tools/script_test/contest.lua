@@ -47,6 +47,7 @@ function update_stats(report, par)
     local player1=string.sub(report,index2,index3-1);
     print(player1)
 
+    if par[0]
     for i = 1, #par do
         print(i, par[i].rating, par[i].performance)
         if i==1 then
