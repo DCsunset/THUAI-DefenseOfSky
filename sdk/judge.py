@@ -201,7 +201,6 @@ class Land(object):
         return data
 
 
-
 Lands = [[] for i in range(MapWidth)]
 
 for i in range(MapWidth):
@@ -219,11 +218,13 @@ if __name__ == '__main__':
                     if m[i][j]:
                         #print('o', sep='', end='')
                     else:
+                        pass
                         #print('*', sep='', end='')
                         # print('')
         else:
             for i in range(m.shape[0]):
                 for j in range(m.shape[1]):
+                    pass
                     #print(m[i][j], sep='', end='')
                     # print('')
 
