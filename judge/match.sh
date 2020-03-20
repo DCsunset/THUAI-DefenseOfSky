@@ -33,4 +33,6 @@ for s in $@; do
     i=$((i + 1))
 done
 
-submissions/$JUDGE/bin "${argv[@]}"
+export PYTHONPATH=/var/botany/lib
+
+python3 submissions/$JUDGE/code.py3 "${argv[@]}"

@@ -1,0 +1,1 @@
+./a.out -i $1 -d ~/THUAI-DefenseOfSky/judge/alpine -s http://127.0.0.1:12345/api

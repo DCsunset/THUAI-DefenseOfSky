@@ -66,7 +66,7 @@
         >赛事编辑</v-btn>
         <v-btn
           text color="primary" class="ml-1 mr-1"
-          :to="`/contest/${$route.params.cid}/submit#edit`"
+          :to="`/contest/${$route.params.cid}/participant#submit`"
           v-if="checkAuth('imIn')"
         >我的代码</v-btn>
         <v-btn
@@ -144,8 +144,8 @@ export default {
       this.$axios.get(
         '/contest/' + this.cid + '/info'
       ).then(res => {
-        const start = this.$functions.dateTimeString(res.data.end_time)
-        const end = this.$functions.dateTimeString(res.data.start_time)
+        const end = this.$functions.dateTimeString(res.data.end_time)
+        const start = this.$functions.dateTimeString(res.data.start_time)
         this.start = new Date(start)
         this.end = new Date(end)
         this.time = start + ' TO ' + end
