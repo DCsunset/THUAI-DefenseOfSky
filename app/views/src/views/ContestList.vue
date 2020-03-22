@@ -5,7 +5,6 @@
     </v-snackbar>
     <v-container>
       <h2 class="my-4">欢迎来到疫情攻坚战赛道
-        <span class="subtitle-1"><i>(平台目前处于测试中...)</i></span>
       </h2>
       <div>当前共有{{total}}场赛事</div>
       <div>
