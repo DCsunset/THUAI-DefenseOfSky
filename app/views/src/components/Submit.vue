@@ -201,10 +201,10 @@ export default {
     tab: 0,
     langIdx: 0,
     langs: [
-      'C', 'Cpp', 'Lua', 'Python', 'Python3'
+      'Cpp'
     ],
     formatLangs: [
-      'gcc.c', 'gcc.cpp', 'lua', 'py', 'py3'
+      'gcc.cpp'
     ],
     langMenu: false,
     content: '',
