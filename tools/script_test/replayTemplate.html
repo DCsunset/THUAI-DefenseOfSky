@@ -1,0 +1,34 @@
+<html>
+  <body>
+    <p>Number of parties:</p>
+    <pre><% num parties %></pre>
+    <p>Names:</p>
+    <pre>
+0: <% party 0 %>
+    1: <% party 1 %></pre
+    >
+    <p>Scores:</p>
+    <pre id="score1"></pre>
+    <pre id="score2"></pre>
+    <a id="download" download="report.json"
+      ><button
+        style="width:6rem;height:2rem;cursor:pointer;box-shadow:3px 3px 4px 0px black"
+      >
+        下载录像
+      </button></a
+    >
+    <p id="data" data-age="24" hidden><% report %></p>
+    <script>
+      report = document.getElementById('data').innerText
+      index1 = report.indexOf('player0') + 10
+      index2 = report.indexOf('player1') + 10
+      index3 = report.indexOf('replay') - 3
+      player0 = parseInt(report.slice(index1, index2 - 14 + 1))
+      player1 = parseInt(report.slice(index2, index3 - 1 + 1))
+      document.getElementById('score1').innerText = '0: ' + player0
+      document.getElementById('score2').innerText = '1: ' + player1
+      var blob = new Blob([report])
+      document.getElementById('download').href = URL.createObjectURL(blob)
+    </script>
+  </body>
+</html>

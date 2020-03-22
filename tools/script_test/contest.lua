@@ -42,21 +42,41 @@ function update_stats(report, par)
     local index3=string.find( report,"replay", 1)-3;
     print(index1,index2,index3)
 
-    local player0=string.sub(report, index1,index2-14)
+    local player0=tonumber(string.sub(report, index1,index2-14))
     print(player0)
-    local player1=string.sub(report,index2,index3-1);
+    local player1=tonumber(string.sub(report,index2,index3-1));
     print(player1)
-
-    if par[0]
+    
+    local playerN0
+    local playerN1
+    if(player0~=0 or player0~=0) then
+        if player0~=-1 and player1~=-1 then
+            playerN0=10000*player0/(player0+player1)
+            playerN1=10000*player1/(player0+player1)
+        elseif player0==-1 then
+            playerN0=0
+            playerN1=10000
+        else
+            playerN0=10000
+            playerN1=0
+        end
+    else
+        playerN0=5000
+        playerN1=5000
+    end
+    
     for i = 1, #par do
         print(i, par[i].rating, par[i].performance)
+    		--par[i].rating=0
+				--par[i].performance='Total Points: '..tostring(par[i].rating)
         if i==1 then
-            par[i].rating=par[i].rating+player0
+            par[i].rating=par[i].rating+string.format("%.0f",playerN0)
         elseif i==2 then
-            par[i].rating=par[i].rating+player1
+            par[i].rating=par[i].rating+string.format("%.0f",playerN1)
         else
             print('No Player')
         end
         par[i].performance = 'Total Points: ' .. tostring(par[i].rating)
+  			
     end
 end
