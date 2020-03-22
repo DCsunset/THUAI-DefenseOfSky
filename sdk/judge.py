@@ -217,6 +217,7 @@ if __name__ == '__main__':
                 for j in range(m.shape[1]):
                     if m[i][j]:
                         #print('o', sep='', end='')
+                        pass
                     else:
                         pass
                         #print('*', sep='', end='')
