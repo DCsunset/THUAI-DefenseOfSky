@@ -1,290 +1,67 @@
 import bot_judge_py as bot
-import subprocess
-import shlex
-import time
-import io
+from Parameters import *
 import sys
-import numpy as np
-import random
-import math
 import json
-
-# 地图规模
-MapWidth = 10
-MapHeight = 10
-
-# 地价 10的倍数
-LandPrice = 200
-
-# 加载建筑物地图
-BuildingMap = np.load("/var/botany/Buildings.npy")
-
-# 病毒的种类数
-PollutionComponentNum = 3
-
-# 最大回合数 要求一定是偶数
-MaxRound = 120
-
-# 覆盖范围的种类数
-MaxRangeNum = 3
-
-# 覆盖范围与形状
-DeltaPos = [
-    [(0, 0), (0, 1), (0, -1), (1, 0), (-1, 0), (0, 2), (0, -2), (2, 0), (-2, 0)],
-    [(0, 0), (0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (1, -1), (-1, 1), (-1, -1)],
-    [(0, 0), (1, 1), (1, -1), (-1, 1), (-1, -1),
-     (2, 2), (2, -2), (-2, 2), (-2, -2)],
-]
-
-# rangeType = 0
-# _ _ * _ _
-# _ _ * _ _
-# * * * * *
-# _ _ * _ _
-# _ _ * _ _
-
-# rangeType = 1
-# _ _ _ _ _
-# _ * * * _
-# _ * * * _
-# _ * * * _
-# _ _ _ _ _
-
-# rangeType = 2
-# * _ _ _ *
-# _ * _ * _
-# _ _ * _ _
-# _ * _ * _
-# * _ _ _ *
-
-ProcessorRangeCost = [500, 600, 500]
-ProcessorTypeCost = [150, 100, 150]
-DetectorRangeCost = [200, 250, 200]
-
-# 情报贩子的价格
-TipsterCost = 400
-
-# 解决病毒的价格
-PollutionProfit = [700, 800, 750]
-
-# 每个非高大建筑的格子是疫区的概率
-PollutionProbability = 0.35
-
-NotPolluted = (np.random.rand(MapWidth, MapHeight) > PollutionProbability)
-NotPolluted[BuildingMap] = True
-
-# 疫情分布地图
-
-PollutionMap = np.random.randint(
-    1, 2**PollutionComponentNum, size=(MapWidth, MapHeight), dtype=np.int)
-PollutionMap[NotPolluted] = 0
-
-# 玩家0与玩家1分别的初始可见地图
-# 玩家0执先手，玩家1执后手
-
-PollutionMap0 = np.zeros_like(PollutionMap)
-PollutionMap1 = np.zeros_like(PollutionMap)
-PollutionProfitMap = np.zeros_like(PollutionMap)
-
-PollutionPoss = []
-for i in range(MapWidth):
-    for j in range(MapHeight):
-        if not NotPolluted[i][j]:
-            PollutionPoss.append((i, j))
-
-random.shuffle(PollutionPoss)
-
-PollutionNum = len(PollutionPoss)
-
-for i, j in PollutionPoss[:int(PollutionNum/3)]:
-    PollutionMap0[i][j] = PollutionMap[i][j]
-
-for i, j in PollutionPoss[PollutionNum-int(PollutionNum/3):PollutionNum]:
-    PollutionMap1[i][j] = PollutionMap[i][j]
-
-for i in range(MapWidth):
-    for j in range(MapHeight):
-        for k in range(PollutionComponentNum):
-            PollutionProfitMap[i][j] += ((PollutionMap[i]
-                                          [j] >> k) & 1)*PollutionProfit[k]
-
-# 初始得分
-Scores = [0, 0]
-
-# 初始金钱数量
-Moneys = [4000, 4000]
-
-# 所有地皮的竞价与使用情况
-# processingType
-# 1 << processingType
-
-
-class Processor(object):
-    def __init__(self, pos, rangeType, processingType, owner):
-        super().__init__()
-        self.pos = pos
-        self.rangeType = rangeType
-        self.processingType = processingType
-        self.owner = owner
-
-    def toJsonObj(self):
-        data = {
-            'pos': self.pos,
-            'rangeType': self.rangeType,
-            'processingType': self.processingType,
-            'owner': self.owner,
-        }
-        return data
-
-    def cover(self, targetPos):
-        if BuildingMap[targetPos[0]][targetPos[1]]:
-            return False
-        x, y = self.pos
-        for dx, dy in DeltaPos[self.rangeType]:
-            if x+dx == targetPos[0] and y+dy == targetPos[1]:
-                if max(abs(dx), abs(dy)) == 2 and BuildingMap[x+(dx >> 1)][y+(dy >> 1)]:
-                    return False
-                return True
-        return False
-
-
-class Detector(object):
-    def __init__(self, pos, rangeType, owner):
-        super().__init__()
-        self.pos = pos
-        self.rangeType = rangeType
-        self.owner = owner
-
-    def toJsonObj(self):
-        data = {
-            'pos': self.pos,
-            'rangeType': self.rangeType,
-            'owner': self.owner,
-        }
-        return data
-
-    def cover(self, targetPos):
-        if BuildingMap[targetPos[0]][targetPos[1]]:
-            return False
-        x, y = self.pos
-        for dx, dy in DeltaPos[self.rangeType]:
-            if x+dx == targetPos[0] and y+dy == targetPos[1]:
-                if max(abs(dx), abs(dy)) == 2 and BuildingMap[x+(dx >> 1)][y+(dy >> 1)]:
-                    return False
-                return True
-        return False
-
-
-class Land(object):
-    def __init__(self, pos, owner=-1, occupied=False, filled=False, bid=LandPrice-1, bidder=-1, round=-1, bidOnly=-1):
-        super().__init__()
-        self.pos = pos
-        self.owner = owner
-        self.filled = filled
-        self.occupied = occupied
-        self.bid = bid
-        self.bidder = bidder
-        self.round = round
-        self.bidOnly = bidOnly
-
-    def toJsonObj(self):
-        data = {
-            'pos': self.pos,
-            'owner': self.owner,
-            'occupied': self.occupied,
-            'filled': self.filled,
-            'bid': self.bid,
-            'bidder': self.bidder,
-            'round': self.round,
-            'bidOnly': self.bidOnly
-        }
-        return data
-
-
-Lands = [[] for i in range(MapWidth)]
-
-for i in range(MapWidth):
-    for j in range(MapHeight):
-        if BuildingMap[i][j]:
-            Lands[i].append(
-                Land((i, j), owner=2, occupied=True, filled=True, bidOnly=2))
-        else:
-            Lands[i].append(Land((i, j)))
-if __name__ == '__main__':
-    def PrintMap(m):
-        if m.dtype == np.bool:
-            for i in range(m.shape[0]):
-                for j in range(m.shape[1]):
-                    if m[i][j]:
-                        #print('o', sep='', end='')
-                        pass
-                    else:
-                        pass
-                        #print('*', sep='', end='')
-                        # print('')
-        else:
-            for i in range(m.shape[0]):
-                for j in range(m.shape[1]):
-                    pass
-                    #print(m[i][j], sep='', end='')
-                    # print('')
-
-                    #print('Buildings Map')
-                    # PrintMap(BuildingMap)
-                    # print()
-
-                    #print('Pollution Map')
-                    # PrintMap(PollutionMap)
-                    # print()
-
-                    #print('Pollution Map 0')
-                    # PrintMap(PollutionMap0)
-                    # print()
-
-                    #print('Pollution Map 1')
-                    # PrintMap(PollutionMap1)
-                    # print()
-
+import time
+import shlex
+import subprocess
+import asyncio
+import signal
+import threading
 
 detectors = []
 processors = []
 
-# subpro = []
+subpro = []
 
 errMsg = ['', '']
 
-log = {}
+log = []
 logPerRound = []
 
 msgObj = {}
 logForSDK = [[], []]
 
+# time_tag = True
+
 # DEBUG
 
 
-def convertByte(jsonStr):
-    msgLen = len(jsonStr)
-    msg = msgLen.to_bytes(4, byteorder='big', signed=True)
-    msg += bytes(jsonStr, encoding="utf8")
-    return msg
+# def convertByte(jsonStr):
+#     msgLen = len(jsonStr)
+#     msg = msgLen.to_bytes(4, byteorder='big', signed=True)
+#     msg += bytes(jsonStr, encoding="utf8")
+#     return msg
 
 
 def sendMsg(jsonStr, goal):
-    #jsonObj = json.loads(jsonStr)
-    #print("======== Send To %d ========" % jsonObj['AI'])
-    #print(json.dumps(jsonObj, sort_keys=True, indent=4, separators=(',', ': ')))
-    # print("============================")
-    #print("goal = %d" % goal)
-    # subpro[goal].stdin.buffer.write(convertByte(jsonStr))
-    # subpro[goal].stdin.buffer.flush()
+    # jsonObj = json.loads(jsonStr)
+    # print(jsonStr)
+    # try:
+    #     # print(subpro[goal].poll())
+    #     subpro[goal].stdin.buffer.write(convertByte(jsonStr))
+    #     subpro[goal].stdin.flush()
+    #     # print(subpro[goal].poll())
+    # except:
+    #     # print(e)
+    #     Scores[goal] = 0
+    #     Scores[1-goal] = 1
+    #     gameEnd()
     bot.send(goal, jsonStr)
 
 
 def receiveMsg(AI):
-    #readBuffer = subpro[AI].stdout.buffer
-    #dataLen = int.from_bytes(readBuffer.read(4), byteorder='big', signed=True)
-    # print(dataLen)
-    #data = readBuffer.read(dataLen)
+    # readBuffer = subpro[AI].stdout.buffer
+    # try:
+    #     tmpBytes = readBuffer.read(4)
+    #     # print(tmpBytes)
+    #     dataLen = int.from_bytes(tmpBytes, byteorder='big', signed=True)
+    #     data = readBuffer.read(dataLen)
+    #     # print(data)
+    # except:
+    #     Scores[AI] = 0
+    #     Scores[1-AI] = 1
+    #     gameEnd()
     # return data
     s, _ = bot.recv(AI, 1000)
     return s
@@ -316,7 +93,7 @@ def logInitState():
             if BuildingMap[i][j]:
                 initState['buildings'].append((i, j))
 
-    log[-1] = initState
+    log.append(initState)
 
 
 def sendInitState(AI):
@@ -608,50 +385,74 @@ def endGame():
     return False
 
 
+def gameEnd():
+    # print("%d %d" % (Scores[0], Scores[1]))
+    # for pro in subpro:
+    #     try:
+    #         pro.terminate()
+    #     except:
+    #         pass
+    # if Scores[0] > 0 or Scores[1] > 0:
+    #     fo = open("replay.json", "w")
+    #     logFormat = {
+    #         "settings": log[0],
+    #         "events": log[1:]
+    #     }
+    #     fo.write(json.dumps(logFormat))
+    #     fo.close()
+
+    logFormat = {
+        "settings": log[0],
+        "events": log[1:]
+    }
+
+    # 保存录像文件
+    print('{ "player0": %d, "player1": %d, "replay": "%s" }' %
+          (Scores[0], Scores[1], json.dumps(logFormat)))
+
+    bot.finish()
+    sys.exit()
+
+
 def main():
     global log, logPerRound, subpro, logForSDK
     if bot.init(sys.argv) != 2:
         print('Incorrect number of players!')
         sys.exit()
-
     # 启动进程
     # try:
-    #    subpro.append(subprocess.Popen(shlex.split(sys.argv[1]), stdout=subprocess.PIPE,\
-    #            stdin=subprocess.PIPE, universal_newlines=True))
-    #    subpro.append(subprocess.Popen(shlex.split(sys.argv[2]), stdout=subprocess.PIPE,\
-    #            stdin=subprocess.PIPE, universal_newlines=True))
+    #     subpro.append(subprocess.Popen(shlex.split(sys.argv[1]), stdout=subprocess.PIPE,
+    #                                    stdin=subprocess.PIPE, universal_newlines=True))
+    #     subpro.append(subprocess.Popen(shlex.split(sys.argv[2]), stdout=subprocess.PIPE,
+    #                                    stdin=subprocess.PIPE, universal_newlines=True))
     # except Exception as e:
-    #    for pro in subpro:
-    #        try:
-    #            pro.terminate()
-    #        except:
-    #            pass
-    #    print(e)
-    #    sys.exit()
+    #     for pro in subpro:
+    #         try:
+    #             pro.terminate()
+    #         except:
+    #             pass
+    #     print(e)
+    #     sys.exit()
     # 初始化，给出地图信息
-
+    # for i in subpro:
+       # print(i.poll())
     sendInitState(0)
     sendInitState(1)
 
     logInitState()
 
     for round in range(MaxRound):
+        # print(f'round={round}')
         AI = round % 2
         # 向AI发送当前的局面信息
         sendRoundState(AI, round)
         # 等待并接收AI的操作信息
-        # time.sleep(1)
-        # 执行AI的操作消息
         msg = receiveMsg(AI)
-
-        # Fail
         if msg == None:
             Scores[AI] = -1
             Scores[1-AI] = 0
-            break
-
+            gameEnd()
         logForSDK[AI] = []
-
         if validate(msg, AI):
             # 为了降低AI难度，结算顺序如下：
             # 治理设备建造操作结算
@@ -669,7 +470,7 @@ def main():
         # 地皮竞拍结果结算
         bidUpdate()
 
-        log[round] = logPerRound
+        log.append(logPerRound)
         logPerRound = []
 
         # 判断游戏是否结束
@@ -677,12 +478,7 @@ def main():
             break
 
     # 保存录像文件
-    print('{ "player0": %d, "player1": %d, "replay": "%s" }' %
-          (Scores[0], Scores[1], json.dumps(log)))
-    # fo = open("replay.json", "w")
-    # fo.write(json.dumps(log))
-    # fo.close()
-    bot.finish()
+    gameEnd()
 
 
 if __name__ == '__main__':
