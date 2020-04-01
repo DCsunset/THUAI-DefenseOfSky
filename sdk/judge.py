@@ -20,7 +20,7 @@ MapHeight = 10
 LandPrice = 200
 
 # 加载建筑物地图
-BuildingMap = np.load("Buildings.npy")
+BuildingMap = np.load("/var/botany/Buildings.npy")
 
 # 病毒的种类数
 PollutionComponentNum = 3
