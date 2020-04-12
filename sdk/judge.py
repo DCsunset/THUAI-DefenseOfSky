@@ -7,6 +7,7 @@ import subprocess
 import asyncio
 import signal
 import threading
+import copy
 
 import numpy as np
 import random
@@ -326,8 +327,8 @@ def logInitState():
         'pollutionMap': PollutionMap.tolist(),
         'pollutionMap0': PollutionMap0.tolist(),
         'pollutionMap1': PollutionMap1.tolist(),
-        'scores': Scores,
-        'moneys': Moneys,
+        'scores': copy.deepcopy(Scores),
+        'moneys': copy.deepcopy(Moneys),
     }
     errMsg = ['', '']
     for i in range(MapWidth):
@@ -369,8 +370,8 @@ def sendRoundState(AI, round):
         'AI': AI,
         'pollution': pollutionM.tolist(),
         'lands': [],  # 所有的地皮的详细信息
-        'moneys': Moneys,
-        'scores': Scores,
+        'moneys': copy.deepcopy(Moneys),
+        'scores': copy.deepcopy(Scores),
         'detectors': [],  # 所有场内的检测设备
         'processors': [],  # 所有场内的处理设备
         'log': logForSDK[AI],
