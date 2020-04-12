@@ -2,12 +2,13 @@ local count = 2
 local su_id = get_id('su')
 
 function on_submission(all, from)
+  	create_match(from,from)
     print('Submission', from)
 end
 
 function on_timer(all)
     count = count + 1
-    if count < 3 then return end
+    if count < 30 then return end
     count = 0
     print('Superuser has ID ' .. tostring(su_id))
     print('Creating matches for contest #0')
@@ -27,6 +28,7 @@ function on_timer(all)
         print(string.format('Contestant %s (%d), rating %d, performance "%s"',
             all[i].handle, all[i].id, all[i].rating, all[i].performance))
         if i > 1 then create_match(all[i].id, all[i - 1].id) end
+  			if i==#all then create_match(all[i].id,all[1].id) end
     end
 end
 
@@ -40,7 +42,6 @@ function update_stats(report, par)
     local index1=string.find( report,"player0",1)+10;
     local index2=string.find(report,"player1",1)+10;
     local index3=string.find( report,"replay", 1)-3;
-    print(index1,index2,index3)
 
     local player0=tonumber(string.sub(report, index1,index2-14))
     print(player0)
@@ -49,7 +50,7 @@ function update_stats(report, par)
     
     local playerN0
     local playerN1
-    if(player0~=0 or player0~=0) then
+    if(player0~=0 or player1~=0) then
         if player0~=-1 and player1~=-1 then
             playerN0=10000*player0/(player0+player1)
             playerN1=10000*player1/(player0+player1)
@@ -64,7 +65,7 @@ function update_stats(report, par)
         playerN0=5000
         playerN1=5000
     end
-    
+  
     for i = 1, #par do
         print(i, par[i].rating, par[i].performance)
     		--par[i].rating=0
